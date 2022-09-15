@@ -33,9 +33,9 @@ def generate_big_blob(img_size = 64, avg_size = 10, random_size_range = 0):
   img[rr,cc] = 1
   return img
 
-def generate_blob_img(big = True, length = 64, blob_size_fraction = 0.1,
+def generate_blob_img(big = True, length = 64, blob_size_fraction = 0.08,
                       n_dim = 2, volume_fraction = 0.3, seed = None,
-                      big_blob_size = 10, big_blob_range=0):
+                      big_blob_size = 8, big_blob_range=2):
   small_blobs = generate_small_blobs(length, blob_size_fraction, 
                                      n_dim, volume_fraction, seed) 
   if big:
