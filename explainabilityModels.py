@@ -117,7 +117,7 @@ def make_gradcam_heatmap(img, model, last_conv_layer_idx, pred_index=None):
 
     # For visualization purpose, we will also normalize the heatmap between 0 & 1
     heatmap = tf.maximum(heatmap, 0) / tf.math.reduce_max(heatmap)
-    heatmap = tf.keras.preprocessing.image.array_to_img(heatmap)
+    heatmap = tf.keras.preprocessing.image.array_to_img(np.expand_dims(heatmap, axis = -1))
     heatmap = heatmap.resize((img.shape[0], img.shape[1]))
     heatmap = tf.keras.preprocessing.image.img_to_array(heatmap)
     return heatmap.squeeze()
