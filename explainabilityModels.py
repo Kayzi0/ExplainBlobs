@@ -83,7 +83,7 @@ def overlapping_occlusion_map(img, label, patch_size, step_size, model):
 
     return sensitivity_map
 
-def make_gradcam_heatmap(img, model, last_conv_layer_idx, pred_index=None):
+def make_gradcam_heatmap(img, model, last_conv_layer_idx = -5, pred_index=None):
     # First, we create a model that maps the input image to the activations
     # of the last conv layer as well as the output predictions
     model.layers[-1].activation = None
