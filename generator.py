@@ -1,3 +1,4 @@
+from cgitb import small
 from skimage import data, measure
 import skimage as sk 
 import matplotlib.pyplot as plt
@@ -6,6 +7,7 @@ from sklearn.preprocessing import minmax_scale
 from skimage.util import random_noise
 from skimage.filters import gaussian
 from skimage import measure
+from skimage.morphology import remove_small_objects
 
 def generate_small_blobs(length = 64, blob_size_fraction = 0.1,
                    n_dim = 2,
@@ -43,3 +45,6 @@ def generate_blob_img(big = True, length = 64, blob_size_fraction = 0.08,
     return np.logical_or(small_blobs, big_blob)
   else:
     return small_blobs
+
+def remove_small_blobs(img, small_size = 9):
+    return remove_small_objects(img, small_size)
