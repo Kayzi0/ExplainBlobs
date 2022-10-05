@@ -8,6 +8,7 @@ from skimage.util import random_noise
 from skimage.filters import gaussian
 from skimage import measure
 from skimage.morphology import remove_small_objects
+from skimage.transform import rotate
 
 def generate_small_blobs(length = 64, blob_size_fraction = 0.1,
                    n_dim = 2,
@@ -48,3 +49,68 @@ def generate_blob_img(big = True, length = 64, blob_size_fraction = 0.08,
 
 def remove_small_blobs(img, small_size = 9):
     return remove_small_objects(img, small_size)
+
+def generate_big_blobs(num_blobs = 1, img_size = 64, avg_size = 10, random_size_range = 0):
+  img = np.zeros((img_size, img_size))
+  for i in range(num_blobs):
+    posx = np.random.randint(img_size)
+    posy = np.random.randint(img_size)
+    blob_size = np.random.randint(avg_size-random_size_range, avg_size+random_size_range+1)
+    rr, cc = sk.draw.disk((posy, posx), blob_size, shape=(img_size, img_size))
+
+    img[rr,cc] = 1
+  return img
+
+def generate_big_blob2(img_size = 64, maj_axis=15, min_axis=5):
+  img = np.zeros((img_size, img_size))
+  #size_maj = np.random.randint(avg_size, avg_size+random_size_range+1)
+  #size_min = np.random.randint(avg_size-random_size_range, avg_size)
+  #posx = np.random.randint(np.max([size_min, size_maj]), img_size - np.max([size_maj, size_min]))
+  #posy = np.random.randint(np.max([size_min, size_maj]), img_size - np.max([size_maj, size_min]))
+  posx = np.random.randint(maj_axis, img_size-maj_axis)
+  posy = np.random.randint(maj_axis, img_size-maj_axis)
+  rr, cc = sk.draw.ellipse(posy, posx, maj_axis, min_axis, shape=(img_size, img_size), rotation=np.random.randint(-15, 15)/10)
+
+  img[rr,cc] = 1
+  return img
+
+
+def generate_small_blobs2(length = 64, blob_size_fraction = 0.1,
+                   n_dim = 2,
+                   volume_fraction = 0.2, seed = None, randomize_sigma = True, rotation = True):
+  rs = np.random.default_rng(seed)
+  shape = length
+  n_pts = max(int(1. / blob_size_fraction) ** n_dim, 1)
+  mask = np.zeros((shape, shape, n_pts))
+  points = (length * rs.random((n_dim, n_pts))).astype(int)
+
+  sigma_factor_x = 0.25
+  sigma_factor_y = 0.25
+
+  for i in range(n_pts):
+    mask[points[:,i][0], points[:,i][1], i] = 1
+    if randomize_sigma:
+      sigma_factor_x = (np.random.randint(low = 10, high = 50)/100)
+      sigma_factor_y = (np.random.randint(low = 10, high = 50)/100)
+
+    mask[:,:,i] = gaussian(mask[:,:,i], sigma=[sigma_factor_x * length * blob_size_fraction, sigma_factor_y * length * blob_size_fraction],
+                    preserve_range=False)
+  
+    angle = np.random.randint(low = 0, high = 180)
+    if rotation:
+      mask[:,:,i] = rotate(mask[:,:,i], angle)
+  mask = mask.sum(axis = -1)
+
+  threshold = np.percentile(mask, 100 * (1 - volume_fraction))
+  return np.logical_not(mask < threshold)
+
+def generate_new_blob_img(ellipse = True, maj_axis = 17, min_axis = 5):
+    r = np.floor(np.sqrt(maj_axis*min_axis))
+    x = generate_big_blobs(num_blobs=7, img_size=128, avg_size=r , random_size_range=0)
+    x2 = generate_small_blobs2(length = 128, blob_size_fraction = 0.06,
+                      n_dim = 2, volume_fraction = 0.2, randomize_sigma = False, rotation= False)
+    if ellipse:
+        y = generate_big_blob2(128, maj_axis, min_axis)
+        return np.logical_or(x,np.logical_or(x2,y)) 
+    else:
+        return np.logical_or(x, x2)
