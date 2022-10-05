@@ -114,3 +114,23 @@ def generate_new_blob_img(ellipse = True, maj_axis = 10, min_axis = 3):
         return np.logical_or(x,np.logical_or(x2,y)) 
     else:
         return np.logical_or(x, x2)
+
+def generate_circles_and_ellipse(num_blobs = 10, img_size = 64, maj_axis=15, min_axis=5):
+  img = np.zeros((img_size, img_size))
+  r = np.ceil(np.sqrt(maj_axis*min_axis))
+  posx = np.random.randint(r, img_size-r)
+  posy = np.random.randint(r, img_size-r)
+  rr, cc = sk.draw.ellipse(posy, posx, maj_axis, min_axis, shape=(img_size, img_size), rotation=np.random.randint(-15, 15)/10)
+  img[rr,cc] = 1
+  for i in range(num_blobs-1):
+      #print(posx-r, posx+r, posy-r, posy+r)
+      while 1 in img[int(posy-r):int(posy+r), int(posx-r):int(posx+r)]:
+        #print(img[int(posx-r):int(posx+r), int(posy-r):int(posy+r)])
+        posx = np.random.randint(r, img_size-r)
+        posy = np.random.randint(r, img_size-r)
+      rr, cc = sk.draw.ellipse(posy, posx, r, r, shape=(img_size, img_size))
+      img[rr,cc] = 1
+  # while 1 in img[int(posy-maj_axis):int(posy+maj_axis), int(posx-maj_axis):int(posx+maj_axis)]:    
+  #   posx = np.random.randint(maj_axis, img_size-maj_axis)
+  #   posy = np.random.randint(maj_axis, img_size-maj_axis)
+  return img
