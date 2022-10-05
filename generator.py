@@ -107,8 +107,8 @@ def generate_small_blobs2(length = 64, blob_size_fraction = 0.1,
 def generate_new_blob_img(ellipse = True, maj_axis = 17, min_axis = 5):
     r = np.floor(np.sqrt(maj_axis*min_axis))
     x = generate_big_blobs(num_blobs=7, img_size=128, avg_size=r , random_size_range=0)
-    x2 = generate_small_blobs2(length = 128, blob_size_fraction = 0.06,
-                      n_dim = 2, volume_fraction = 0.2, randomize_sigma = False, rotation= False)
+    x2 = generate_small_blobs(length = 128, blob_size_fraction = 0.06,
+                      n_dim = 2, volume_fraction = 0.2)
     if ellipse:
         y = generate_big_blob2(128, maj_axis, min_axis)
         return np.logical_or(x,np.logical_or(x2,y)) 
