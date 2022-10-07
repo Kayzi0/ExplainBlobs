@@ -104,16 +104,13 @@ def generate_small_blobs2(length = 64, blob_size_fraction = 0.1,
   threshold = np.percentile(mask, 100 * (1 - volume_fraction))
   return np.logical_not(mask < threshold)
 
-def generate_new_blob_img(ellipse = True, maj_axis = 10, min_axis = 3):
+def generate_new_blob_img(ellipse = True, size = 64, maj_axis = 10, min_axis = 3, num_big_blobs = 5):
     r = np.floor(np.sqrt(maj_axis*min_axis))
-    x = generate_big_blobs(num_blobs=7, img_size=64, avg_size=r , random_size_range=0)
-    x2 = generate_small_blobs(length = 64, blob_size_fraction = 0.06,
+    x = generate_circles_and_ellipse(ellipse, num_big_blobs, size, maj_axis, min_axis)
+    y = generate_small_blobs(size, blob_size_fraction = 0.06,
                       n_dim = 2, volume_fraction = 0.2)
-    if ellipse:
-        y = generate_big_blob2(64, maj_axis, min_axis)
-        return np.logical_or(x,np.logical_or(x2,y)) 
-    else:
-        return np.logical_or(x, x2)
+
+    return np.logical_or(x,y)
 
 def generate_circles_and_ellipse(ellipse = True, num_blobs = 10, img_size = 64, maj_axis=15, min_axis=5):
   img = np.zeros((img_size, img_size))
