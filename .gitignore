@@ -12,3 +12,5 @@ plots/
 
 lightning_logs/
 cell_images/
+region_means.npy
+segmentatons.npy
