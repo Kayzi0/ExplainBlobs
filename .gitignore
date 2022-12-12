@@ -11,3 +11,5 @@ __pycache__/
 plots/
 
 lightning_logs/
+cell_images/
+segmentations.npy
