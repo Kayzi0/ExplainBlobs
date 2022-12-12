@@ -12,4 +12,4 @@ plots/
 
 lightning_logs/
 cell_images/
-segmentations.npy
+segmentatons.npy
