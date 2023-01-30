@@ -9,6 +9,7 @@ from skimage.filters import gaussian
 from skimage import measure
 from skimage.morphology import remove_small_objects
 from skimage.transform import rotate
+from scipy.stats import qmc
 
 def generate_small_blobs(length = 64, blob_size_fraction = 0.1,
                    n_dim = 2,
@@ -133,3 +134,38 @@ def generate_circles_and_ellipse(ellipse = True, num_blobs = 10, img_size = 64, 
   #   posx = np.random.randint(maj_axis, img_size-maj_axis)
   #   posy = np.random.randint(maj_axis, img_size-maj_axis)
   return img
+
+
+def generate_pseudo_img(n_pts = 128, size = 64):
+    img = np.zeros([size,size])
+    for i in range(n_pts):
+        pt = np.random.randint(0, size, size =  (2,1))
+        while img[pt[0], pt[1]] == 1:
+            pt = np.random.randint(0, size, size =  (2,1))
+        img[pt[0], pt[1]] = 1
+    return img
+
+def generate_quasi_img(n_exp = 7, size = 64, n_pts = 128):
+    sobol = qmc.Sobol(d = 2)
+    sample = sobol.random_base2(m=7)
+    sample = np.floor(size*sample).astype('uint8')
+    qmc_img = np.zeros([size,size])
+    for i in range(n_pts):
+        qmc_img[sample[i][0], sample[i][1]] = 1
+    return qmc_img
+
+def generate_2d_power(n_pts = 128, size = 64, pow = 3):
+    power_dist = np.random.power(pow, size=(n_pts, 2))
+    power_dist = np.floor(size*power_dist).astype('uint8')
+    pow_img = np.zeros([size,size])
+    for i in range(n_pts):
+        pow_img[power_dist[i][0], power_dist[i][1]] = 1
+    return pow_img
+
+def generate_2d_normal(n_pts = 128, size = 64):
+    norm = np.random.standard_normal(size=(n_pts,2))
+    norm = ((size-1)*(norm-np.min(norm))/np.ptp(norm)).astype('uint8')
+    img = np.zeros([size,size])
+    for i in range(n_pts):
+        img[norm[i][0], norm[i][1]] = 1
+    return img
