@@ -13,3 +13,4 @@ plots/
 lightning_logs/
 cell_images/
 segmentatons.npy
+heatmaps_scorecam.npy
