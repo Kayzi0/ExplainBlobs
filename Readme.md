@@ -17,7 +17,7 @@ Branches provided are the following:
 
 Please note that the branches are to be seen as fairly seperate, as the different dataset necessitate different feature extractions. Merging branches is thus **not advised**.
 
-### Recommended model for each dataset:
+### Recommended model for each dataset
 
 * blobs: model40_padding
 * cells: cells/model40
