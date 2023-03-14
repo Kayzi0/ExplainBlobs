@@ -9,7 +9,7 @@ __pycache__/
 
 .ipynb_checkpoints
 plots/
-
+models/leukaemia/
 lightning_logs/
 cell_images/
 leukaemia_images/
